@@ -32,17 +32,30 @@ namespace AplicacaoCinema.Controllers
       if (filme.IsFailure)
         return BadRequest(filme.Error);
 
-      _logger.LogInformation("Filme {filme.Value} criado em memória", filme.Value.Id);
+      if (await _filmesRepositorio.RecuperarPorNomeAsync(filme.Value.Titulo) != null)
+        return BadRequest("Filme já existe");
+
+
+      string message = $"Filme {filme.Value} criado em memória { filme.Value.Id}";
+      _logger.LogInformation(message);
 
       await _filmesRepositorio.InserirAsync(filme.Value, cancellationToken);
       await _filmesRepositorio.CommitAsync(cancellationToken);
-      return CreatedAtAction(nameof(RecuperarPorId), new { id = filme.Value.Id }, filme.Value.Id);
+      return CreatedAtAction("RecuperarPorId", new { id = filme.Value.Id, cancellationToken = cancellationToken }, filme.Value);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> RecuperarPorId(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> RecuperarPorIdAsync(Guid id, CancellationToken cancellationToken)
     {
       var filme = await _filmesRepositorio.RecuperarPorIdAsync(id, cancellationToken);
+
+      return Ok(filme);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> RecuperarTodosAsync(CancellationToken cancellationToken)
+    {
+      var filme = await _filmesRepositorio.RecuperarTodosAsync(cancellationToken);
 
       return Ok(filme);
     }

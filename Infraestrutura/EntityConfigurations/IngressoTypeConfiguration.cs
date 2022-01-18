@@ -1,3 +1,4 @@
+using System;
 using AplicacaoCinema.Dominio;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,10 +11,10 @@ namespace AplicacaoCinema.Infraestrutura.EntityConfigurations
     public void Configure(EntityTypeBuilder<Ingresso> builder)
     {
 
-      builder.ToTable("Ingressos", "Cinemas");
+      builder.ToTable("Ingressos", "dbo");
       builder.HasKey(c => c.Id);
-      builder.HasKey(c => c.Sessao.Id);
-      builder.OwnsOne(c => c.Sessao);
+      builder.Property(c => c.Data);
+      builder.Property(c => c.SessaoId);
 
     }
   }

@@ -8,11 +8,11 @@ namespace AplicacaoCinema.Models
   {
     [Required]
     [MinLength(5, ErrorMessage = "Tamanho inválido")]
-    public Guid Id;
-    public Filme Filme;
-    public DateTime Inicio;
-    public DateTime Fim;
-    public int QuantidadeIngressosTotal;
-    public double Preco;
+    public Guid Id { get; set; }
+    public Guid IdFilme { get; set; }
+    public DateTime Inicio { get; set; }
+    public DateTime Fim { get; set; }
+    public int QuantidadeIngressosTotal { get; set; }
+    public double Preco { get; set; }
   }
 }

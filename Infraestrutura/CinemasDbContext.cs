@@ -49,7 +49,7 @@ namespace AplicacaoCinema.Infraestrutura
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.ApplyConfiguration(new FilmeTypeConfiguration());
-      modelBuilder.ApplyConfiguration(new SessaoTypeConfiguration());
+      modelBuilder.ApplyConfiguration(new SessoesTypeConfiguration());
       modelBuilder.ApplyConfiguration(new IngressoTypeConfiguration());
     }
   }

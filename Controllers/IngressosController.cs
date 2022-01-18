@@ -43,7 +43,12 @@ namespace AplicacaoCinema.Controllers
       if (sessao == null)
         return BadRequest("Sessao não foi localizada");
 
-      var ingressos = Ingresso.Criar(sessao, new DateTime(), inputModel.Quantidade);
+      sessao.QuantidadeIngressosVendidos = await _ingressosRepositorio.RecuperarNumeroIngressos(guidSessao);
+
+      if (!sessao.AceitaNovosIngressos(inputModel.Quantidade))
+        return UnprocessableEntity("O limite da sessão será atingido com esta quantidade de ingressos");
+
+      var ingressos = Ingresso.Criar(sessao.IdSessao, DateTime.UtcNow, inputModel.Quantidade);
       if (ingressos.IsFailure)
         return BadRequest(ingressos.Error);
 
@@ -52,7 +57,7 @@ namespace AplicacaoCinema.Controllers
         await _ingressosRepositorio.InserirAsync(ingresso, cancellationToken);
         await _ingressosRepositorio.CommitAsync(cancellationToken);
       }
-      return CreatedAtAction("RecuperarPorId", new { id = ingressos.Value.ToArray() });
+      return CreatedAtAction("RecuperarPorSessao", new { id = guidSessao }, ingressos.Value);
 
     }
 
@@ -65,6 +70,26 @@ namespace AplicacaoCinema.Controllers
       if (ingresso == null)
         return NotFound();
       return Ok(ingresso);
+    }
+
+    [HttpGet("Sessoes/{id}")]
+    public async Task<IActionResult> RecuperarPorSessaoAsync(string id, CancellationToken cancellationToken)
+    {
+      if (!Guid.TryParse(id, out var guid))
+        return BadRequest("Id inválido");
+      var ingressos = await _ingressosRepositorio.RecuperarPorSessaoAsync(guid, cancellationToken);
+      if (ingressos == null)
+        return NotFound();
+      return Ok(ingressos);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> RecuperarTodosAsync(CancellationToken cancellationToken = default)
+    {
+      var ingressos = await _ingressosRepositorio.RecuperarTodosAsync(cancellationToken);
+      if (ingressos == null)
+        return NotFound();
+      return Ok(ingressos);
     }
   }
 }

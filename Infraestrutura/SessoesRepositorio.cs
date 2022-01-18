@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 namespace AplicacaoCinema.Infraestrutura
 {
@@ -32,18 +33,19 @@ namespace AplicacaoCinema.Infraestrutura
 
     public async Task<IEnumerable<Sessao>> RecuperarTodosAsync(CancellationToken cancellationToken = default)
     {
-      return await _cinemasDbContext
+      var sessoes = await _cinemasDbContext
           .Sessoes
-          .Include(c => c.Id)
-          .ToListAsync(cancellationToken);
+          .ToListAsync<Sessao>(cancellationToken);
+
+      return sessoes;
     }
+
 
     public async Task<Sessao> RecuperarPorIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
       return await _cinemasDbContext
           .Sessoes
-          .Include(c => c.Id)
-          .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+          .FirstOrDefaultAsync(c => c.IdSessao == id, cancellationToken);
     }
     public async Task CommitAsync(CancellationToken cancellationToken = default)
     {

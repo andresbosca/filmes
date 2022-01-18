@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using AplicacaoCinema.Infraestrutura;
 using CSharpFunctionalExtensions;
 
 namespace AplicacaoCinema.Dominio
@@ -33,5 +35,6 @@ namespace AplicacaoCinema.Dominio
 
       return new Filme(Guid.NewGuid(), titulo, duracao, sinopse);
     }
+
   }
 }

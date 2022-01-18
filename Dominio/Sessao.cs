@@ -9,48 +9,48 @@ namespace AplicacaoCinema.Dominio
 {
   public sealed class Sessao
   {
-    public Guid Id { get; }
-    public Filme _filme;
-    public DateTime _inicio;
-    public DateTime _fim;
-    public int _quantidadeIngressosTotal;
-    public double _preco;
-    public int _quantidadeIngressosVendidos;
+    public Guid IdSessao { get; set; }
+    public Guid IdFilme { get; set; }
+    public DateTime Inicio { get; set; }
+    public DateTime Fim { get; set; }
+    public int QuantidadeIngressosTotal { get; set; }
+    public Double Preco { get; set; }
+    public int QuantidadeIngressosVendidos { get; set; }
     private Sessao() { }
-    public Sessao(Guid id, Filme filme, DateTime inicio, DateTime fim, int quantidadeIngressosTotal, double preco)
+    public Sessao(Guid id, Guid idFilme, DateTime inicio, DateTime fim, int quantidadeIngressosTotal, Double preco)
     {
-      Id = id;
-      _filme = filme;
-      _inicio = inicio;
-      _fim = fim;
-      _quantidadeIngressosTotal = quantidadeIngressosTotal;
-      _preco = preco;
-      _quantidadeIngressosVendidos = 0;
+      IdSessao = id;
+      IdFilme = idFilme;
+      Inicio = inicio;
+      Fim = fim;
+      QuantidadeIngressosTotal = quantidadeIngressosTotal;
+      Preco = preco;
+      QuantidadeIngressosVendidos = 0;
     }
-    public Sessao(Guid id, Filme filme, DateTime inicio, DateTime fim, int quantidadeIngressosTotal, double preco, int quantidadeIngressosVendidos)
+    public Sessao(Guid id, Guid idFilme, DateTime inicio, DateTime fim, int quantidadeIngressosTotal, Double preco, int quantidadeIngressosVendidos)
     {
-      Id = id;
-      _filme = filme;
-      _inicio = inicio;
-      _fim = fim;
-      _quantidadeIngressosTotal = quantidadeIngressosTotal;
-      _preco = preco;
-      _quantidadeIngressosVendidos = quantidadeIngressosVendidos;
+      IdSessao = id;
+      IdFilme = idFilme;
+      Inicio = inicio;
+      Fim = fim;
+      QuantidadeIngressosTotal = quantidadeIngressosTotal;
+      Preco = preco;
+      QuantidadeIngressosVendidos = quantidadeIngressosVendidos;
     }
-    public bool AceitaNovosIngressos()
+    public bool AceitaNovosIngressos(int quantidade)
     {
-      return _quantidadeIngressosTotal >= (_quantidadeIngressosVendidos + 1);
+      return QuantidadeIngressosTotal >= (QuantidadeIngressosVendidos + quantidade);
     }
 
-    public static Result<Sessao> Criar(Filme filme, DateTime inicio, DateTime fim, int quantidadeIngressosTotal, double preco)
+    public static Result<Sessao> Criar(Guid filme, DateTime inicio, DateTime fim, int quantidadeIngressosTotal, Double preco)
     {
       var sessao = new Sessao(Guid.NewGuid(), filme, inicio, fim, quantidadeIngressosTotal, preco);
       return sessao;
     }
 
-    public static Result<Sessao> CriarExistente(Filme filme, DateTime inicio, DateTime fim, int quantidadeIngressosTotal, double preco, int quantidadeIngressosVendidos)
+    public static Result<Sessao> CriarExistente(Guid id, Guid iDfilme, DateTime inicio, DateTime fim, int quantidadeIngressosTotal, Double preco, int quantidadeIngressosVendidos)
     {
-      var sessao = new Sessao(Guid.NewGuid(), filme, inicio, fim, quantidadeIngressosTotal, preco, quantidadeIngressosVendidos);
+      var sessao = new Sessao(id, iDfilme, inicio, fim, quantidadeIngressosTotal, preco, quantidadeIngressosVendidos);
       return sessao;
     }
   }

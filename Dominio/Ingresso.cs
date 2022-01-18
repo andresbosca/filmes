@@ -8,24 +8,21 @@ namespace AplicacaoCinema.Dominio
   public sealed class Ingresso
   {
     public Guid Id { get; }
-    public Sessao Sessao { get; }
+    public Guid SessaoId { get; }
     public DateTime Data { get; }
     private Ingresso() { }
-    //Guid.NewGuid(), sessao.id, sessao.sala, sessao.DescricaoFilme, sessao.preco, data)
-    private Ingresso(Guid id, Sessao sessao, DateTime data)
+    private Ingresso(Guid id, Guid sessaoId, DateTime data)
     {
       Id = id;
-      Sessao = sessao;
+      SessaoId = sessaoId;
       Data = data;
     }
-    public static Result<List<Ingresso>> Criar(Sessao sessao, DateTime data, int quantidade)
+    public static Result<List<Ingresso>> Criar(Guid sessaoId, DateTime data, int quantidade)
     {
       List<Ingresso> ingressos = new List<Ingresso>();
       for (int i = 0; i < quantidade; i++)
       {
-        if (!sessao.AceitaNovosIngressos())
-          return Result.Failure<List<Ingresso>>("Sessao não aceita novas vendas");
-        ingressos[i] = new Ingresso(Guid.NewGuid(), sessao, data);
+        ingressos.Add(new Ingresso(Guid.NewGuid(), sessaoId, data));
       }
 
       return ingressos;

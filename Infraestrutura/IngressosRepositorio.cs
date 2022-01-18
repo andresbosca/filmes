@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 namespace AplicacaoCinema.Infraestrutura
 {
@@ -31,12 +32,22 @@ namespace AplicacaoCinema.Infraestrutura
           .Ingressos
           .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
-    public async Task<IEnumerable<Ingresso>> RecuperarTodosAsync(Guid idSessao, CancellationToken cancellationToken = default)
+    public async Task<int> RecuperarNumeroIngressos(Guid id, CancellationToken cancellationToken = default)
+    {
+      return await _cinemasDbContext.Ingressos.Where(c => c.SessaoId == id).CountAsync(cancellationToken);
+    }
+
+    public async Task<List<Ingresso>> RecuperarPorSessaoAsync(Guid id, CancellationToken cancellationToken = default)
     {
       return await _cinemasDbContext
           .Ingressos
-          .Include(c => c.Sessao.Id == idSessao)
-          .ToListAsync(cancellationToken);
+          .Where(c => c.SessaoId == id).ToListAsync();
+    }
+    public async Task<IEnumerable<Ingresso>> RecuperarTodosAsync(CancellationToken cancellationToken = default)
+    {
+      return await _cinemasDbContext
+          .Ingressos
+          .ToListAsync<Ingresso>(cancellationToken);
     }
 
     public async Task CommitAsync(CancellationToken cancellationToken = default)

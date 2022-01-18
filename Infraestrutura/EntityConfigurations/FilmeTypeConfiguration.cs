@@ -10,11 +10,12 @@ namespace AplicacaoCinema.Infraestrutura.EntityConfigurations
   {
     public void Configure(EntityTypeBuilder<Filme> builder)
     {
-      builder.ToTable("Filmes", "Cinemas");
+      builder.ToTable("Filmes", "dbo");
       builder.HasKey(c => c.Id);
-      builder.HasKey(c => c.Titulo);
+      builder.Property(c => c.Titulo);
       builder.Property(c => c.Sinopse);
       builder.Property(c => c.Duracao);
+
     }
   }
 }
